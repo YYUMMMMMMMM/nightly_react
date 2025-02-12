@@ -1,6 +1,6 @@
 import {Box, Button, HStack, Image, Text, VStack} from "@chakra-ui/react";
 
-const ProfileCard2 = () => {
+const UserProfileCard = () => {
 
   const profile = {
     image: "/logo.png",  // 프로필 이미지 경로
@@ -39,4 +39,4 @@ const ProfileCard2 = () => {
   )
 }
 
-export default ProfileCard2;
+export default UserProfileCard;

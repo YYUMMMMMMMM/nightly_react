@@ -1,8 +1,38 @@
 import { Box, Text } from '@chakra-ui/react'
 import MyFeedList from "../feed/MyFeedList"
 import ProfileCard from "../profile/ProfileCard"
+import {useSelector} from "react-redux";
+import {useEffect, useState} from "react";
 
-const MyProfile = ({ image, nicname, feed, follower, following}) => {
+import axios from "utils/axios";
+import {useParams} from "react-router-dom";
+
+const Profile = () => {
+  const [email, setEmail] = useState(useSelector(state => state.auth.email));
+
+  const userEmail = useParams().email;
+
+  console.log(userEmail);
+
+  const [myProfile, setMyProfile] = useState(true);
+
+  const [user, setUser] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (email !== userEmail) {
+      setEmail(userEmail);
+      setMyProfile(false);
+    } else {
+      setMyProfile(true);
+    }
+
+    axios.get(`/api/main/profile/${email}`)
+        .then((response) => response.data)
+        .then((data) => setUser(data))
+        .catch((error) => setErrorMessage(error.message));
+  },[email, userEmail]);
+
 
   const feeds = [
     {
@@ -31,14 +61,15 @@ const MyProfile = ({ image, nicname, feed, follower, following}) => {
     },
   ];
 
+
   return (
       <Box ml="270px" mt={4} p={4}>
         <Text fontSize="3xl" fontWeight="bold" color="#003366">PROFILE</Text>
-        <ProfileCard />
+        <ProfileCard profile={user} myProfile={myProfile} />
         <Box width="100%" borderBottom="1px solid gray" my={4} />
         <MyFeedList feeds={feeds} />
       </Box>
   )
 }
 
-export default MyProfile
+export default Profile

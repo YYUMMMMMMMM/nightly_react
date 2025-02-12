@@ -1,8 +1,23 @@
 import { Box, Text } from '@chakra-ui/react'
 import MyFeedList from "../feed/MyFeedList"
-import ProfileCard2 from "../profile/ProfileCard2"
+import UserProfileCard from "../profile/UserProfileCard"
+import {useParams} from "react-router-dom";
 
-const ProfilePage2 = ({ image, nicname, feed, follower, following}) => {
+/**
+ * 사용자 프로필 페이지
+ * @param image : 프로필 이미지 URL
+ * @param nickname
+ * @param feed
+ * @param follower
+ * @param following
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const UserProfile = ({ image, nickname, feed, follower, following}) => {
+
+  const email = useParams();
+
+  console.log(email);
 
   const feeds = [
     {
@@ -34,11 +49,11 @@ const ProfilePage2 = ({ image, nicname, feed, follower, following}) => {
   return (
       <Box ml="270px" mt={4} p={4}>
         <Text fontSize="3xl" fontWeight="bold" color="#003366">PROFILE</Text>
-        <ProfileCard2 />
+        <UserProfileCard />
         <Box width="100%" borderBottom="1px solid gray" my={4} />
         <MyFeedList feeds={feeds} />
       </Box>
   )
 }
 
-export default ProfilePage2
+export default UserProfile

@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {login} from "../../redux/slices/authSlice";
 
 const SignIn = () => {
   const {
@@ -16,6 +18,8 @@ const SignIn = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
 
+  const dispatch = useDispatch();
+
   const handelSignIn = async (data) => {
     console.log(data);
     try {
@@ -24,8 +28,11 @@ const SignIn = () => {
           data
       );
       if (response.status === 200) {
-        alert(response.data.message);
-        navigate("/");
+        const email = response.data.email;
+        alert(email);
+        console.log(email);
+        dispatch(login(email));
+        navigate("/main");
       }
     } catch (error) {
       if (error.response) {
