@@ -6,11 +6,19 @@ import { useState } from "react";
 import MenuItem from "./MenuItem"
 import SearchModal from "./SearchModal"
 import FeedWrite from "../feed/FeedWrite"
+import {useNavigate} from "react-router-dom";
+import {logout} from "../../redux/slices/authSlice";
+import {useDispatch, useSelector} from "react-redux";
 
 const SideBar = () => {
 
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isFeedWriteOpen, setIsFeedWriteOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const email = useSelector(state => state.auth.email);
+  const dispatch = useDispatch();
 
   const openSearchModal = () => {
     setIsSearchModalOpen(true);
@@ -27,6 +35,11 @@ const SideBar = () => {
   const closeDiaryWrite = () => {
     setIsFeedWriteOpen(false);
   };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  }
 
   return (
       <Box
@@ -47,12 +60,12 @@ const SideBar = () => {
           <Image src="/textlogo.png" alt="Logo" maxW="200px" mt={4} />
           <Box width="100%" borderBottom="1px solid gray" my={4} />
 
-          <MenuItem icon={<FiHome />} label="홈" onClick={() => console.log("홈 클릭")} />
+          <MenuItem icon={<FiHome />} label="홈" onClick={() => navigate("/main")} />
           <MenuItem icon={<FiSearch />} label="검색" onClick={openSearchModal} />
-          <MenuItem icon={<LuMoon />} label="팔로우" onClick={() => console.log("팔로우 클릭")} />
+          <MenuItem icon={<LuMoon />} label="팔로우" onClick={() => navigate("/main/follow")} />
           <MenuItem icon={<FiBook />} label="일기 작성" onClick={openDiaryWrite} />
-          <MenuItem icon={<GoPerson />} label="프로필" onClick={() => console.log("프로필 클릭")} />
-          <MenuItem icon={<LuLogOut />} label="로그아웃" onClick={() => console.log("로그아웃 클릭")} />
+          <MenuItem icon={<GoPerson />} label="프로필" onClick={() => navigate(`/main/profile/${email}`)} />
+          <MenuItem icon={<LuLogOut />} label="로그아웃" onClick={handleLogout} />
         </VStack>
 
         <SearchModal isOpen={isSearchModalOpen} onClose={closeSearchModal} />

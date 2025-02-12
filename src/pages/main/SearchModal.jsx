@@ -1,18 +1,51 @@
 import { useState } from "react";
-import {Box, Button, Input, Portal} from "@chakra-ui/react";
+import {Box, Button, Image, Input, Portal, Text} from "@chakra-ui/react";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const SearchModal = ({ isOpen, onClose }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [list, setList] = useState();
+
+  const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    const value = e.target.value;
+    setSearchQuery(value);
+    if (value === "") {
+      setList();
+      return;
+    }
+    axios.get(`http://localhost:8080/api/main/search/${value}`)
+        .then(res => res.data)
+        .then(data => {
+          console.log(data);
+          setList(data);
+        })
   };
 
   const handleSearch = () => {
     console.log("Searching for:", searchQuery);
+    axios.get(`http://localhost:8080/api/main/search/${searchQuery}`)
+    .then(res => res.data)
+    .then(data => {
+      console.log(data);
+      setList(data);
+    })
   };
 
+  const handleClose = () => {
+    setSearchQuery("");
+    setList([]);
+    onClose();
+  }
+
   if (!isOpen) return null;
+
+  const handleClick = (email) => {
+    handleClose();
+    navigate("/main/profile/"+ email);
+  }
 
   return (
       <Portal>
@@ -27,7 +60,7 @@ const SearchModal = ({ isOpen, onClose }) => {
             justifyContent="center"
             alignItems="center"
             zIndex="999999"
-            onClick={onClose}
+            onClick={handleClose}
         >
           <Box
               bg="white"
@@ -40,12 +73,12 @@ const SearchModal = ({ isOpen, onClose }) => {
               position="relative"
               onClick={(e) => e.stopPropagation()}
           >
-
+            {/* 취소버튼 */}
             <Button
                 position="absolute"
                 top="1px"
                 right="1px"
-                onClick={onClose}
+                onClick={handleClose}
                 variant="ghost"
                 color="#003366"
                 fontSize="30px"
@@ -79,7 +112,38 @@ const SearchModal = ({ isOpen, onClose }) => {
                 검색
               </Button>
             </Box>
+
+            {/* 구분선 */}
             <Box width="100%" borderBottom="1px solid gray" my={4} />
+
+            {/* 프로필 카드 */}
+            {list?.map((user, index) =>
+              <Box
+                  key={index}
+                  h="50px"
+                  mt={"-1px"} // 상단 여백 제거
+                  display={"flex"}
+                  justifyContent="start"
+                  alignItems="center"
+                  border="1px solid lightgray"
+                  borderRadius="4px"
+                  onClick={() => handleClick(user.email)}
+                  cursor="pointer"
+              >
+                {user.profileImage
+                    ? <Image src={user.profileImage} boxSize="inherit" />
+                    : <Image src="/logo01.png" boxSize="inherit" />}
+                <Box
+                    ml={"5px"}
+                    alignItems="start"
+                    display={"flex"}
+                    flexDirection="column">
+                  <Text>{user.nickname}</Text>
+                  <Text fontSize={"75%"}>{user.email}</Text>
+                </Box>
+              </Box>
+            )}
+
           </Box>
         </Box>
       </Portal>

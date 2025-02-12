@@ -2,27 +2,22 @@ import {Box, Button, HStack, Image, Text, VStack} from "@chakra-ui/react";
 import { useState } from "react";
 import ProfileUpdate from "./ProfileUpdate"
 
-const ProfileCard = () => {
+const ProfileCard = ({profile, myProfile}) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
 
-  const profile = {
-    image: "/logo.png",  // 프로필 이미지 경로
-    nickname: "닉네임",  // 작성자 닉네임
-    feed: "00",
-    follower: "00",
-    follow: "00",
-    content: "자기소개 내용입니다. 여기에는 자신에 대한 간단한 소개가 들어갑니다."
-  };
-
   const handleOpenModal = () => setIsModalOpen(true); // 모달 열기
   const handleCloseModal = () => setIsModalOpen(false); // 모달 닫기
+
+  const handleFollow = () => {
+
+  };
 
   return (
       <Box w="1200px" bg="white" p={6} mt={4}>
         <HStack spacing={6}>
           <Image
-              src={profile.image}
+              src={profile.profileImage}
               alt="프로필 이미지"
               borderRadius="full"
               objectFit="cover"
@@ -32,7 +27,12 @@ const ProfileCard = () => {
           <VStack align="start" spacing={4} ml={4}>
             <HStack spacing={6}>
             <Text fontWeight="bold" fontSize="xl">{profile.nickname}</Text>
-            <Button ml={4} variant="surface" onClick={handleOpenModal}>프로필 수정</Button>
+
+              {myProfile ?
+                <Button ml={4} variant="surface" onClick={handleOpenModal}>프로필 수정</Button> :
+                <Button ml={4} variant="surface" onClick={handleFollow} backgroundColor="#003366" color="white">팔로우</Button>
+              }
+
             </HStack>
             <HStack spacing={6}>
               <Text fontSize="md"> 게시물 {profile.feed} |</Text>
