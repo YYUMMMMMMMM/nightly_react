@@ -9,6 +9,7 @@ import FeedWrite from "../feed/FeedWrite"
 import {useNavigate} from "react-router-dom";
 import {logout} from "../../redux/slices/authSlice";
 import {useDispatch, useSelector} from "react-redux";
+import {refresh} from "../../redux/slices/renderSlice";
 
 const SideBar = () => {
 
@@ -35,6 +36,11 @@ const SideBar = () => {
   const closeDiaryWrite = () => {
     setIsFeedWriteOpen(false);
   };
+
+  const requestProfile = () => {
+    dispatch(refresh());
+    navigate(`/main/profile/${email}`);
+  }
 
   const handleLogout = () => {
     dispatch(logout());
@@ -64,7 +70,7 @@ const SideBar = () => {
           <MenuItem icon={<FiSearch />} label="검색" onClick={openSearchModal} />
           <MenuItem icon={<LuMoon />} label="팔로우" onClick={() => navigate("/main/follow")} />
           <MenuItem icon={<FiBook />} label="일기 작성" onClick={openDiaryWrite} />
-          <MenuItem icon={<GoPerson />} label="프로필" onClick={() => navigate(`/main/profile/${email}`)} />
+          <MenuItem icon={<GoPerson />} label="프로필" onClick={requestProfile} />
           <MenuItem icon={<LuLogOut />} label="로그아웃" onClick={handleLogout} />
         </VStack>
 

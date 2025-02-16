@@ -1,7 +1,8 @@
 import { useState } from "react";
 import {Box, Button, Image, Input, Portal, Text} from "@chakra-ui/react";
-import axios from "axios";
+import axios from "utils/axios";
 import {useNavigate} from "react-router-dom";
+import logo from "components/logo";
 
 const SearchModal = ({ isOpen, onClose }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,7 +17,7 @@ const SearchModal = ({ isOpen, onClose }) => {
       setList();
       return;
     }
-    axios.get(`http://localhost:8080/api/main/search/${value}`)
+    axios.get(`/api/main/search/${value}`)
         .then(res => res.data)
         .then(data => {
           console.log(data);
@@ -26,7 +27,7 @@ const SearchModal = ({ isOpen, onClose }) => {
 
   const handleSearch = () => {
     console.log("Searching for:", searchQuery);
-    axios.get(`http://localhost:8080/api/main/search/${searchQuery}`)
+    axios.get(`/api/main/search/${searchQuery}`)
     .then(res => res.data)
     .then(data => {
       console.log(data);
@@ -130,9 +131,7 @@ const SearchModal = ({ isOpen, onClose }) => {
                   onClick={() => handleClick(user.email)}
                   cursor="pointer"
               >
-                {user.profileImage
-                    ? <Image src={user.profileImage} boxSize="inherit" />
-                    : <Image src="/logo01.png" boxSize="inherit" />}
+                <Image src={user.profileImage || logo} boxSize="inherit" />
                 <Box
                     ml={"5px"}
                     alignItems="start"
