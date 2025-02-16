@@ -29,7 +29,7 @@ const SignIn = () => {
       );
       if (response.status === 200) {
         const email = response.data.email;
-        alert(email);
+        // alert(email);
         console.log(email);
         dispatch(login(email));
         navigate("/main");
